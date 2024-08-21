@@ -1,0 +1,17 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "allowUnreachableCode": false,
+    "strict": true,
+    "paths": {
+      "@/*": ["./*"],
+      "@icons/*": ["./app/icons/*"],
+      "@assets/*": ["./assets/*"],
+      "@components/*": ["./components/*"],
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "app/icons/searchIcon.js", "app/icons/bellIcon.js"]
+}
