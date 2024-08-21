@@ -1,5 +1,5 @@
-## Wick App Startup Directions
+## Expo Image Picker Test- Start Project
 
 npm install
 
-npm start
+npx expo start
