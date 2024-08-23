@@ -6,7 +6,7 @@ import {
   VStack,
   Image,
   Pressable,
-  HStack
+  HStack,
 } from "@gluestack-ui/themed";
 import { Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -15,9 +15,14 @@ import XIcon from "@icons/xIcon";
 
 export default function WelcomeScreen() {
   const [selectedImages, setSelectedImages] = useState<
-    { uri: string | undefined; selected: boolean; width: number; height: number }[]
+    {
+      uri: string | undefined;
+      selected: boolean;
+      width: number;
+      height: number;
+    }[]
   >([]);
-  
+
   const [cameraStatus, requestCameraPermission] =
     ImagePicker.useCameraPermissions();
   const [mediaLibraryStatus, requestMediaLibraryPermission] =
@@ -43,16 +48,15 @@ export default function WelcomeScreen() {
           <Text size="2xl" mb="$2" textAlign="center">
             Expo Image Picker Test
           </Text>
-      
-          
+          <Text size="xl" mb="$2" textAlign="center">
+            Tap camera icon to begin
+          </Text>
+
           <HStack px="$4">
             {selectedImages.map((image, index) => (
-              <Pressable key={index} testID={`image-pressable-${index}`}>
-                <Pressable
-                  onPress={() => handleRemoveImage(index)}
-                  testID={`remove-image-button-${index}`}
-                >
-                  <XIcon w="$6" h="$6" ml={55} testID={`remove-image-icon-${index}`} />
+              <Pressable key={index}>
+                <Pressable onPress={() => handleRemoveImage(index)}>
+                  <XIcon w="$6" h="$6" ml={55} />
                 </Pressable>
                 <Image
                   source={{ uri: image.uri }}
@@ -64,7 +68,6 @@ export default function WelcomeScreen() {
                     width: image.width,
                     height: image.height,
                   }}
-                  testID={`selected-image-${index}`}
                 />
               </Pressable>
             ))}
@@ -77,18 +80,16 @@ export default function WelcomeScreen() {
             requestMediaLibraryPermission={requestMediaLibraryPermission}
             onSelectImage={(image, width, height) => {
               if (image) {
-                setSelectedImages(prevImages => [
+                setSelectedImages((prevImages) => [
                   ...prevImages,
                   { ...image, width, height },
                 ]);
               } else {
                 handleImageSelectionError(
-                  "Failed to select image. Please try again.",
+                  "Failed to select image. Please try again."
                 );
               }
             }}
-            isAvatarChange={false}
-            allowsEditing={false}
           />
         </VStack>
       </ScrollView>

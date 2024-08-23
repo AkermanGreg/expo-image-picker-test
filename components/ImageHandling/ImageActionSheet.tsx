@@ -21,7 +21,7 @@ interface ImageActionSheetProps {
   onSelectImage: (
     image: { uri: string | undefined; selected: boolean },
     width: number,
-    height: number,
+    height: number
   ) => void;
   cameraStatus: ImagePicker.CameraPermissionResponse | undefined | null;
   requestCameraPermission: () => Promise<ImagePicker.CameraPermissionResponse>;
@@ -30,8 +30,6 @@ interface ImageActionSheetProps {
     | undefined
     | null;
   requestMediaLibraryPermission: () => Promise<ImagePicker.MediaLibraryPermissionResponse>;
-  isAvatarChange: boolean | undefined | null;
-  allowsEditing: boolean;
   onPress?: () => void; // Optional onPress prop
   onClose?: () => void; // Optional onClose prop
 }
@@ -42,10 +40,8 @@ const ImageActionSheet: React.FC<ImageActionSheetProps> = ({
   requestCameraPermission,
   mediaLibraryStatus,
   requestMediaLibraryPermission,
-  isAvatarChange = false,
-  allowsEditing = false,
   onPress,
-  onClose, // Destructure onClose prop
+  onClose,
 }) => {
   const [showActionsheet, setShowActionsheet] = useState(false);
 
@@ -72,7 +68,6 @@ const ImageActionSheet: React.FC<ImageActionSheetProps> = ({
           if (permission.granted) {
             const options: ImagePicker.ImagePickerOptions = {
               mediaTypes: ImagePicker.MediaTypeOptions.Images,
-              allowsEditing: allowsEditing,
               quality: 1,
             };
 
@@ -93,7 +88,7 @@ const ImageActionSheet: React.FC<ImageActionSheetProps> = ({
                         resize: { width: resizedWidth, height: resizedHeight },
                       },
                     ],
-                    { compress: 1, format: ImageManipulator.SaveFormat.JPEG },
+                    { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
                   );
 
                 onSelectImage(
@@ -102,7 +97,7 @@ const ImageActionSheet: React.FC<ImageActionSheetProps> = ({
                     selected: true,
                   },
                   resizedWidth,
-                  resizedHeight,
+                  resizedHeight
                 );
 
                 if (onPress) {
@@ -121,13 +116,12 @@ const ImageActionSheet: React.FC<ImageActionSheetProps> = ({
         } else {
           const options: ImagePicker.ImagePickerOptions = {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: allowsEditing,
             quality: 1,
           };
 
           const result: ImagePicker.ImagePickerResult =
             await ImagePicker.launchImageLibraryAsync(options);
-          if (!result.canceled) {
+          if (!result.cancelled) {
             try {
               const aspectRatio =
                 result.assets[0].width / result.assets[0].height;
@@ -138,7 +132,7 @@ const ImageActionSheet: React.FC<ImageActionSheetProps> = ({
                 await ImageManipulator.manipulateAsync(
                   result.assets[0].uri,
                   [{ resize: { width: resizedWidth, height: resizedHeight } }],
-                  { compress: 1, format: ImageManipulator.SaveFormat.JPEG },
+                  { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
                 );
 
               onSelectImage(
@@ -147,7 +141,7 @@ const ImageActionSheet: React.FC<ImageActionSheetProps> = ({
                   selected: true,
                 },
                 resizedWidth,
-                resizedHeight,
+                resizedHeight
               );
 
               if (onPress) {
@@ -187,7 +181,7 @@ const ImageActionSheet: React.FC<ImageActionSheetProps> = ({
 
             const result: ImagePicker.ImagePickerResult =
               await ImagePicker.launchCameraAsync(options);
-            if (!result.canceled) {
+            if (!result.cancelled) {
               try {
                 const aspectRatio =
                   result.assets[0].width / result.assets[0].height;
@@ -202,7 +196,7 @@ const ImageActionSheet: React.FC<ImageActionSheetProps> = ({
                         resize: { width: resizedWidth, height: resizedHeight },
                       },
                     ],
-                    { compress: 1, format: ImageManipulator.SaveFormat.JPEG },
+                    { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
                   );
 
                 onSelectImage(
@@ -211,7 +205,7 @@ const ImageActionSheet: React.FC<ImageActionSheetProps> = ({
                     selected: true,
                   },
                   resizedWidth,
-                  resizedHeight,
+                  resizedHeight
                 );
 
                 if (onPress) {
@@ -236,7 +230,7 @@ const ImageActionSheet: React.FC<ImageActionSheetProps> = ({
 
           const result: ImagePicker.ImagePickerResult =
             await ImagePicker.launchCameraAsync(options);
-          if (!result.canceled) {
+          if (!result.cancelled) {
             try {
               const aspectRatio =
                 result.assets[0].width / result.assets[0].height;
@@ -247,7 +241,7 @@ const ImageActionSheet: React.FC<ImageActionSheetProps> = ({
                 await ImageManipulator.manipulateAsync(
                   result.assets[0].uri,
                   [{ resize: { width: resizedWidth, height: resizedHeight } }],
-                  { compress: 1, format: ImageManipulator.SaveFormat.JPEG },
+                  { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
                 );
 
               onSelectImage(
@@ -256,7 +250,7 @@ const ImageActionSheet: React.FC<ImageActionSheetProps> = ({
                   selected: true,
                 },
                 resizedWidth,
-                resizedHeight,
+                resizedHeight
               );
 
               if (onPress) {
@@ -279,36 +273,17 @@ const ImageActionSheet: React.FC<ImageActionSheetProps> = ({
 
   return (
     <Box>
-      {isAvatarChange ? (
-        <Pressable
-          onPress={() => setShowActionsheet(true)}
-          bg="$carbonGray"
-          borderRadius="$3xl"
-          py="$0.5"
-          px="$4"
-        >
-          <Text
-            fontFamily="$medium"
-            fontSize="$xs"
-            fontWeight="$mediumfw"
-            textAlign="center"
-          >
-            Change Profile Photo
-          </Text>
-        </Pressable>
-      ) : (
-        <Pressable
-          onPress={() => {
-            setShowActionsheet(true);
-            if (onPress) {
-              onPress();
-            }
-          }}
-        >
-          <CameraIcon w="$6" h="$6" mr="$4" />
-        </Pressable>
-      )}
-    
+      <Pressable
+        onPress={() => {
+          setShowActionsheet(true);
+          if (onPress) {
+            onPress();
+          }
+        }}
+      >
+        <CameraIcon w="$6" h="$6" mr="$4" />
+      </Pressable>
+
       <Actionsheet isOpen={showActionsheet} onClose={handleClose} zIndex={999}>
         <ActionsheetBackdrop />
         <ActionsheetContent h="$72" zIndex={999}>
